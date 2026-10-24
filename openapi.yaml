@@ -1,0 +1,91 @@
+openapi: 3.1.0
+info:
+  title: IncuBrix Prompt-Based Video Editing Engine
+  version: 0.2.0
+  description: Deterministic transcript-editing prototype; not a real-media renderer.
+servers:
+  - url: http://127.0.0.1:8000
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: Service is alive
+  /ready:
+    get:
+      summary: Readiness check
+      responses:
+        '200':
+          description: Service is ready
+  /api/v1/sessions:
+    post:
+      summary: Create a transcript editing session
+      parameters:
+        - in: header
+          name: Idempotency-Key
+          schema: {type: string}
+          required: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text: {type: string, minLength: 1}
+                words_per_minute: {type: integer, minimum: 30, maximum: 300, default: 150}
+      responses:
+        '201':
+          description: Session created
+  /api/v1/sessions/{session_id}:
+    get:
+      summary: Get current timeline state
+      parameters:
+        - in: path
+          name: session_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Timeline state}
+        '404': {description: Session not found}
+  /api/v1/sessions/{session_id}/instructions:
+    post:
+      summary: Apply a plain-language instruction
+      parameters:
+        - in: path
+          name: session_id
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [instruction]
+              properties:
+                instruction: {type: string}
+      responses:
+        '200': {description: Applied, needs clarification, or rejected}
+  /api/v1/sessions/{session_id}/undo:
+    post:
+      summary: Undo the latest edit
+      parameters:
+        - in: path
+          name: session_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Undo result}
+  /api/v1/sessions/{session_id}/redo:
+    post:
+      summary: Redo the latest undone edit
+      parameters:
+        - in: path
+          name: session_id
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Redo result}

@@ -1,0 +1,23 @@
+[
+  {
+    "text": "Hello everyone welcome to my video today we test the editor",
+    "instructions": [
+      "Cut the words 'welcome to my video'",
+      "Undo",
+      "Redo"
+    ]
+  },
+  {
+    "text": "Welcome to the channel and welcome to our show",
+    "instructions": [
+      "Cut the words 'welcome to'"
+    ]
+  },
+  {
+    "text": "Hello this is a test of captions",
+    "instructions": [
+      "Add caption 'Welcome!' to words 'this is a test'",
+      "Cut the words 'this is a test'"
+    ]
+  }
+]
